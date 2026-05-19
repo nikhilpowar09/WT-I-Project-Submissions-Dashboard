@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WT-I Project Submissions Dashboard (2025-26)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+        :root {
+            /* Smooth Transition Parameters */
+            --transition-speed: 0.25s;
+            --easing: cubic-bezier(0.16, 1, 0.3, 1);
+
+            /* Light Theme Palette variables */
+            --light-bg: #f8fafc;
+            --light-surface-main: #ffffff;
+            --light-surface-card: #f1f5f9;
+            --light-border: rgba(0, 0, 0, 0.06);
+            --light-border-hover: rgba(99, 102, 241, 0.4);
+            --light-text-main: #0f172a;
+            --light-text-muted: #64748b;
+            --light-accent: #4f46e5;
+            --light-accent-glow: rgba(79, 70, 229, 0.1);
+
+            /* Dark Theme Palette variables */
+            --dark-bg: #030712;
+            --dark-surface-main: #090d16;
+            --dark-surface-card: #111827;
+            --dark-border: rgba(255, 255, 255, 0.04);
+            --dark-border-hover: rgba(99, 102, 241, 0.4);
+            --dark-text-main: #f9fafb;
+            --dark-text-muted: #9ca3af;
+            --dark-accent: #6366f1;
+            --dark-accent-glow: rgba(99, 102, 241, 0.15);
+
+            /* Static Theme Accents */
+            --brand-purple: #a855f7;
+            --brand-emerald: #10b981;
+            --brand-amber: #f59e0b;
+        }
+
+        /* Semantic Mapping System based on State Active Theme flags */
+        html[data-theme="light"] {
+            --bg-base: var(--light-bg);
+            --surface-main: var(--light-surface-main);
+            --surface-card: var(--light-surface-card);
+            --border-base: var(--light-border);
+            --border-hover: var(--light-border-hover);
+            --text-main: var(--light-text-main);
+            --text-muted: var(--light-text-muted);
+            --accent: var(--light-accent);
+            --accent-glow: var(--light-accent-glow);
+            --shadow-elevation: 0 10px 30px -10px rgba(0,0,0,0.05);
+        }
+
+        html[data-theme="dark"] {
+            --bg-base: var(--dark-bg);
+            --surface-main: var(--dark-surface-main);
+            --surface-card: var(--dark-surface-card);
+            --border-base: var(--dark-border);
+            --border-hover: var(--dark-border-hover);
+            --text-main: var(--dark-text-main);
+            --text-muted: var(--dark-text-muted);
+            --accent: var(--dark-accent);
+            --accent-glow: var(--dark-accent-glow);
+            --shadow-elevation: 0 20px 40px -15px rgba(0,0,0,0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            padding: 2rem;
+            transition: background-color var(--transition-speed) var(--easing), color var(--transition-speed) var(--easing);
+        }
+
+        /* Top Action Bar Layer & Navigation Layout */
+        .navbar {
+            max-width: 1600px;
+            margin: 0 auto 3rem auto;
+            background: var(--surface-main);
+            border: 1px solid var(--border-base);
+            border-radius: 20px;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-elevation);
+        }
+
+        .nav-logo-zone {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-indicator {
+            background: var(--accent-glow);
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .nav-logo-zone h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        /* Master Utility Mode Switcher Button */
+        .theme-toggle-btn {
+            background: var(--surface-card);
+            border: 1px solid var(--border-base);
+            color: var(--text-main);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all var(--transition-speed) var(--easing);
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        /* Master Application Grid Grid Engine */
+        .app-workspace {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        /* Analytics and Sidebar Panel Systems Modules */
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .glass-box {
+            background: var(--surface-main);
+            border: 1px solid var(--border-base);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-elevation);
+        }
+
+        .glass-box h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Advanced Filtering Action Blocks Layouts */
+        .interactive-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .menu-action {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 0.9rem 1.2rem;
+            border-radius: 14px;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s var(--easing);
+        }
+
+        .menu-action:hover {
+            background: var(--surface-card);
+            color: var(--text-main);
+        }
+
+        .menu-action.active {
+            background: var(--accent-glow);
+            border-color: rgba(99, 102, 241, 0.2);
+            color: var(--accent);
+        }
+
+        .badge-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            background: var(--surface-card);
+            color: var(--text-muted);
+        }
+
+        .menu-action.active .badge-count {
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        /* Complex Grid Layout Area Container */
+        .main-content-stream {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Interactive Filter Top Shell Dashboard Component */
+        .search-strip {
+            background: var(--surface-main);
+            border: 1px solid var(--border-base);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-elevation);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-input-wrapper input {
+            width: 100%;
+            background: var(--surface-card);
+            border: 1px solid var(--border-base);
+            border-radius: 16px;
+            padding: 1.1rem 1.5rem 1.1rem 3.2rem;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all var(--transition-speed) var(--easing);
+        }
+
+        .search-input-wrapper input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        .search-icon-svg {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Statistics Distribution Data Strip Layer */
+        .stats-grid-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-mini-pill {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-card);
+            padding: 1.25rem 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-base);
+        }
+
+        .stat-mini-pill span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .stat-mini-pill h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        /* High Quality Dev Card Engine */
+        .cards-viewport-mesh {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .developer-node-card {
+            background: var(--surface-main);
+            border: 1px solid var(--border-base);
+            border-radius: 24px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 250px;
+            box-shadow: var(--shadow-elevation);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .developer-node-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            border-color: var(--border-hover);
+            box-shadow: 0 30px 60px -20px var(--accent-glow), var(--shadow-elevation);
+        }
+
+        .card-meta-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .index-tag-key {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: var(--surface-card);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+        }
+
+        .cloud-badge {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+        }
+
+        .cloud-badge.github { background: rgba(168, 85, 247, 0.08); color: var(--brand-purple); border: 1px solid rgba(168, 85, 247, 0.2); }
+        .cloud-badge.vercel { background: rgba(245, 158, 11, 0.08); color: var(--brand-amber); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .cloud-badge.netlify { background: rgba(16, 185, 129, 0.08); color: var(--brand-emerald); border: 1px solid rgba(16, 185, 129, 0.2); }
+
+        .card-body-core h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .category-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .category-pill::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .developer-node-card:hover .category-pill::before {
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .card-footer-action {
+            margin-top: 2.5rem;
+        }
+
+        .action-anchor {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface-card);
+            border: 1px solid var(--border-base);
+            padding: 1rem 1.25rem;
+            border-radius: 16px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: all 0.2s var(--easing);
+        }
+
+        .action-anchor:hover {
+            background: var(--text-main);
+            color: var(--bg-base);
+            border-color: var(--text-main);
+        }
+
+        .action-anchor svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            transition: transform 0.2s var(--easing);
+        }
+
+        .action-anchor:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* Empty State Fallback Layout block mapping */
+        .empty-matrix-fallback {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 8rem 2rem;
+            border: 2px dashed var(--border-base);
+            border-radius: 28px;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        /* Screen Configurations Interface Breakpoints scaling rules */
+        @media (max-width: 1100px) {
+            .app-workspace { grid-template-columns: 1fr; }
+            .side-panel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .side-panel { grid-template-columns: 1fr; }
+            .stats-grid-strip { grid-template-columns: 1fr; gap: 1rem; }
+            .navbar { padding: 1rem; margin-bottom: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Application Top Action Navbar Assembly Module -->
+<header class="navbar">
+    <div class="nav-logo-zone">
+        <h2>WT-I Project Submissions Dashboard</h2>
+        <span class="nav-indicator">S.Y. COMP ENG (2025-26)</span>
+    </div>
+    <!-- Single Target Mode Execution Switching Anchor -->
+    <button class="theme-toggle-btn" id="themeToggler" title="Switch interface view mode">🌗</button>
+</header>
+
+<!-- Main App Workspace Dynamic Grid System -->
+<div class="app-workspace">
+
+    <!-- Primary Filters & Aggregates Left Dock -->
+    <aside class="side-panel">
+        
+        <!-- Category Segment Switch Engine Container -->
+        <div class="glass-box">
+            <h3>📂 Segment Directories</h3>
+            <nav class="interactive-menu" id="segmentGroup">
+                <button class="menu-action active" data-segment="all">
+                    <span>Master Directory</span>
+                    <span class="badge-count" id="badge-all">0</span>
+                </button>
+                <button class="menu-action" data-segment="portfolio">
+                    <span>Developer Portfolios</span>
+                    <span class="badge-count" id="badge-portfolio">0</span>
+                </button>
+                <button class="menu-action" data-segment="ecommerce">
+                    <span>E-Commerce / Retail</span>
+                    <span class="badge-count" id="badge-ecommerce">0</span>
+                </button>
+                <button class="menu-action" data-segment="hospitality">
+                    <span>Food & Hospitality</span>
+                    <span class="badge-count" id="badge-hospitality">0</span>
+                </button>
+                <button class="menu-action" data-segment="automotive">
+                    <span>Automotive Platforms</span>
+                    <span class="badge-count" id="badge-automotive">0</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Infrastructure Meta Metric Counter Panel Container -->
+        <div class="glass-box">
+            <h3>📡 Edge Infrastructure</h3>
+            <div class="interactive-menu">
+                <div class="stat-mini-pill" style="margin-bottom: 0.75rem;">
+                    <span>GitHub Pages Nodes</span>
+                    <h4 style="color: var(--brand-purple);" id="counter-github">0</h4>
+                </div>
+                <div class="stat-mini-pill" style="margin-bottom: 0.75rem;">
+                    <span>Vercel Deployments</span>
+                    <h4 style="color: var(--brand-amber);" id="counter-vercel">0</h4>
+                </div>
+                <div class="stat-mini-pill">
+                    <span>Netlify CDN targets</span>
+                    <h4 style="color: var(--brand-emerald);" id="counter-netlify">0</h4>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- Project Node Cards Stream Viewport Output -->
+    <main class="main-content-stream">
+        
+        <!-- Smart Search Processing Filter Element Block -->
+        <div class="search-strip">
+            <div class="search-input-wrapper">
+                <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="liveSearchEngine" placeholder="Query developer identity, deployment domain string or platform tag...">
+            </div>
+        </div>
+
+        <!-- Core Rendering Array Matrix Grid Grid -->
+        <div class="cards-viewport-mesh" id="meshViewTarget">
+            <!-- Dynamic Injection Template Layer maps fields -->
+        </div>
+
+        <!-- Missing Array Parameters UI Fallback View Block -->
+        <div class="empty-matrix-fallback" id="emptyFallbackView">
+            <h3 style="color: var(--text-main); font-size: 1.4rem; margin-bottom: 0.5rem;">Zero Runtime Profiles Found</h3>
+            <p>The system parameters evaluated returned an empty structural list. Alter your filter query strings.</p>
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    // Complete Dataset Model Source Repository Array Configuration Layout
+    const studentRepository = [
+        { name: "Aditya Kambale", url: "https://adityakamblevk18-ai.github.io/virat-kohli-website/" },
+        { name: "Atharv Shinde", url: "https://atharvshinde9119.github.io/Portfolio/" },
+        { name: "Aayan Mulla", url: "https://aayanmulla7828.github.io/Aayan/" },
+        { name: "Atharv Kashid", url: "https://rohit-sharma-portfolio-gules.vercel.app" },
+        { name: "Varad Gaikwad", url: "https://mc-laren-supercar.vercel.app/" },
+        { name: "Rohan Handifod", url: "https://rohan18h.github.io/-void-streetwear/#shop" },
+        { name: "Gaoslazam Toufik Sandarwale", url: "https://my-portfolio-theta-ten-55.vercel.app/" },
+        { name: "Saniya Kamble", url: "https://sanika841.github.io/Coffee.website/" },
+        { name: "Vaishnavi Anil Shinde", url: "https://vaishnavi-shinde244.github.io/Skincare.website/" },
+        { name: "Vaishnavi Jaysing Lokhande", url: "https://vaishnavilokhande-alt.github.io/Shopping.website/" },
+        { name: "Rutuja Vaibhav Patil", url: "https://rutuja8956-design.github.io/Jewellery.website/" },
+        { name: "Sakshi Sanjay Patil", url: "https://sakshi772-bypatil.github.io/Pizza.website/" },
+        { name: "Sumit Narhari Bondre", url: "https://sumitbondre011-sketch.github.io/PORTFOLIO/" },
+        { name: "Samira Shafik Sayyad", url: "https://sayyadsamira15.github.io/GYM/" },
+        { name: "Prajwal Aurwade", url: "https://aurwadeprajwal-cmd.github.io/athletix/" },
+        { name: "Pranav Shinde", url: "https://pranav-8206.github.io/bmw-website/" },
+        { name: "Avadhut Kamble", url: "https://avadhutkamble2206.github.io/iqoo-pro/" },
+        { name: "Pravin Nilappa Muchandi", url: "https://pravinmuchandi.github.io/Pravin/" },
+        { name: "Abhilash Ashok Jabgond", url: "https://abhi007aj.github.io/Abhilash/" },
+        { name: "Pratiksha Satish Mahajan", url: "https://pratikshmahajan.github.io/Pratiksha19-mahajan11" },
+        { name: "Jyoti Baliram Madane", url: "https://jyotimadane.netlify.app/" },
+        { name: "Aditya Biru Mane", url: "https://adyamane7986-ship-it.github.io/adii/" },
+        { name: "Komal Pravin Turture", url: "https://komalturture.github.io/komal/" },
+        { name: "Sumaiya Nadaf", url: "https://student-sumaiyya.github.io/Flight-Booking/" },
+        { name: "Sanket Sanjay Khandekar", url: "https://sanketkhandekar739-code.github.io/Outdoors-Game-/" },
+        { name: "Rajnandini Santosh Sonawale", url: "https://sonawalerajnandini-sys.github.io/Rajnandini-123/" },
+        { name: "Sakshi Sachin Karande", url: "https://karandesakshi32233-sketch.github.io/Sakshi-123/" },
+        { name: "Sachi Niranjan Mane", url: "https://sachiselearn.netlify.app/" },
+        { name: "Pratik Nitin Ghorpade", url: "https://pratikghorpade29.github.io/solestyle/" },
+        { name: "Kiran Todalabagi", url: "https://travel-sphere-pearl.vercel.app" },
+        { name: "Mayuresh Vishnu Madyapgol", url: "https://mayuresh8137-source.github.io/Elite-GYM/" },
+        { name: "Ankita Sanjay Dhole", url: "https://cyber-nexus-bice.vercel.app/" },
+        { name: "Arati Potdar", url: "https://aratitraveld.netlify.app/" },
+        { name: "Navnath Ingole", url: "https://navnath-ashy.vercel.app/" },
+        { name: "Vikram Mane", url: "https://vikrammane.netlify.app" },
+        { name: "Sakshi Shashikant Patil", url: "https://sakshipatil3092006-design.github.io/Patil-hotel-/" },
+        { name: "Arbaz Sadik Bargir", url: "https://arbazbargir860-coder.github.io/Thunder-Motors/" },
+        { name: "Aryan Rade", url: "https://AryanRade.github.io/My_first_website/" },
+        { name: "Dhanashri Kolekar", url: "https://dhanshirkolekar.netlify.app/" },
+        { name: "Aryan Sutar", url: "https://aryansutar-07.github.io/myhtml_website/" },
+        { name: "Nilisha Kharade", url: "https://nilishabote2805-source.github.io/digital-college-notice-board/" },
+        { name: "Anzalna Landur", url: "https://landuranzalna-cyber.github.io/PORTFOLIO/" },
+        { name: "Piyush Dipak Sarode", url: "https://voyago-dream-destinations.netlify.app/" },
+        { name: "Sanika Savanta Wavare", url: "https://sanikawavare72-cmd.github.io/My-first-web/" },
+        { name: "Kartik Patil", url: "https://sadashivpatil748-eng.github.io/Defender/" },
+        { name: "Trupti Mane", url: "https://manetrupti2226-ux.github.io/Fationhub/" },
+        { name: "Vijaya Narute", url: "https://vijayanarute.netlify.app/" },
+        { name: "Sanika Dilip Dhobale", url: "https://manetrupti2226-ux.github.io/online-food-order/" },
+        { name: "Ruturaj Suresh Kharade", url: "https://ruturaj2127.github.io/Ruturaj-k/" },
+        { name: "Shruti Ranjit Jadhav", url: "https://patilshruti8548-spec.github.io/Jadav/" },
+        { name: "Aditya Kumbhar", url: "https://adityakumbhar47.github.io/LUXE-TIME/" },
+        { name: "Subhan Makandar", url: "https://netflix-dark-series-web.vercel.app/" },
+        { name: "Shubham Vishwambhar Tidke", url: "https://shubhamtidke110-create.github.io/Food-shop/" },
+        { name: "Rehan Kandekari", url: "https://stark-tech-industries2.netlify.app/" },
+        { name: "Parth Parit", url: "https://parthparit.netlify.app" },
+        { name: "Priyanka Ghugare", url: "https://manetrupti2226-ux.github.io/DreamBits/" },
+        { name: "Arpita Padale", url: "https://manetrupti2226-ux.github.io/Student-Life-Finance/" },
+        { name: "Soham Dhumal", url: "https://sohamdhumal1015.github.io/One8/" },
+        { name: "Neha Bhorawat", url: "https://nehamooncafe.netlify.app/#menu" },
+        { name: "Saloni Dhurve", url: "https://salonidhurvecakes.netlify.app/" },
+        { name: "Kore Amasiddha", url: "https://student-sumaiyya.github.io/Health-fitness/" },
+        { name: "Mohite Ajit Babasaheb", url: "https://mohite09062005-bot.github.io/Car-modifications-/" },
+        { name: "Piyush Hegade", url: "https://piyushh41.github.io/Car-showroom/" },
+        { name: "Samidha Santosh Patyan", url: "https://samidha3011.github.io/Flim-Industry-website-/" }
+    ];
+
+    // Parser Engine: Heuristic Classification Mapping Layer
+    const runtimeCollection = studentRepository.map(entry => {
+        let detectedHost = "github";
+        if (entry.url.includes("vercel.app")) detectedHost = "vercel";
+        if (entry.url.includes("netlify.app")) detectedHost = "netlify";
+
+        let segment = "portfolio"; // Default structural tier fallback
+        const textualFingerprint = (entry.name + entry.url).toLowerCase();
+
+        if (textualFingerprint.includes("shop") || textualFingerprint.includes("shopping") || textualFingerprint.includes("jewellery") || textualFingerprint.includes("solestyle") || textualFingerprint.includes("fationhub")) {
+            segment = "ecommerce";
+        } else if (textualFingerprint.includes("cafe") || textualFingerprint.includes("pizza") || textualFingerprint.includes("hotel") || textualFingerprint.includes("cakes") || textualFingerprint.includes("food")) {
+            segment = "hospitality";
+        } else if (textualFingerprint.includes("car") || textualFingerprint.includes("bmw") || textualFingerprint.includes("mclaren") || textualFingerprint.includes("motors") || textualFingerprint.includes("showroom") || textualFingerprint.includes("defender")) {
+            segment = "automotive";
+        }
+
+        return { ...entry, host: detectedHost, segment: segment };
+    });
+
+    // Interface DOM Element Selectors
+    const meshTarget = document.getElementById('meshViewTarget');
+    const inputEngine = document.getElementById('liveSearchEngine');
+    const fallbackBlock = document.getElementById('emptyFallbackView');
+    const themeToggler = document.getElementById('themeToggler');
+    const segmentButtons = document.querySelectorAll('[data-segment]');
+
+    let activeFilterSegment = "all";
+    let activeSearchToken = "";
+
+    // Toggle Theme Execution Hook
+    themeToggler.addEventListener('click', () => {
+        const activeRootTheme = document.documentElement.getAttribute('data-theme');
+        const nextTheme = activeRootTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', nextTheme);
+    });
+
+    // Calculate Dynamic Filter Menu Counts and Statistics Layout
+    function calculateAnalytics() {
+        document.getElementById('counter-github').textContent = runtimeCollection.filter(i => i.host === 'github').length;
+        document.getElementById('counter-vercel').textContent = runtimeCollection.filter(i => i.host === 'vercel').length;
+        document.getElementById('counter-netlify').textContent = runtimeCollection.filter(i => i.host === 'netlify').length;
+
+        document.getElementById('badge-all').textContent = runtimeCollection.length;
+        document.getElementById('badge-portfolio').textContent = runtimeCollection.filter(i => i.segment === 'portfolio').length;
+        document.getElementById('badge-ecommerce').textContent = runtimeCollection.filter(i => i.segment === 'ecommerce').length;
+        document.getElementById('badge-hospitality').textContent = runtimeCollection.filter(i => i.segment === 'hospitality').length;
+        document.getElementById('badge-automotive').textContent = runtimeCollection.filter(i => i.segment === 'automotive').length;
+    }
+
+    // Main Card Matrix Rendering Engine Block
+    function executeRenderCycle() {
+        const targetedDataset = runtimeCollection.filter(item => {
+            const evaluateSearch = item.name.toLowerCase().includes(activeSearchToken) || item.url.toLowerCase().includes(activeSearchToken);
+            const evaluateSegment = (activeFilterSegment === 'all') ? true : (item.segment === activeFilterSegment);
+            return evaluateSearch && evaluateSegment;
+        });
+
+        meshTarget.innerHTML = '';
+
+        if(targetedDataset.length === 0) {
+            fallbackBlock.style.display = "block";
+            return;
+        }
+        fallbackBlock.style.display = "none";
+
+        targetedDataset.forEach((node, index) => {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'developer-node-card';
+
+            // Clean printable segment tag string format conversion logic
+            let segmentLabel = "Developer Profile";
+            if (node.segment === "ecommerce") segmentLabel = "E-Commerce Market Site";
+            if (node.segment === "hospitality") segmentLabel = "Hospitality / Food Outlet";
+            if (node.segment === "automotive") segmentLabel = "Automotive Platform";
+
+            cardEl.innerHTML = `
+                <div class="card-meta-head">
+                    <span class="index-tag-key">NODE // ${String(index + 1).padStart(2, '0')}</span>
+                    <span class="cloud-badge ${node.host}">${node.host}</span>
+                </div>
+                <div class="card-body-core">
+                    <h3>${node.name}</h3>
+                    <span class="category-pill">${segmentLabel}</span>
+                </div>
+                <div class="card-footer-action">
+                    <a href="${node.url}" target="_blank" class="action-anchor">
+                        <span>Inspect Deployment</span>
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            `;
+            meshTarget.appendChild(cardEl);
+        });
+    }
+
+    // Hook Input and Filtration Event Listeners
+    inputEngine.addEventListener('input', (e) => {
+        activeSearchToken = e.target.value.toLowerCase();
+        executeRenderCycle();
+    });
+
+    segmentButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            segmentButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilterSegment = btn.getAttribute('data-segment');
+            executeRenderCycle();
+        });
+    });
+
+    // Run Engine Initializers
+    calculateAnalytics();
+    executeRenderCycle();
+</script>
+</body>
+</html>
