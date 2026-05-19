@@ -3,7 +3,7 @@
 An ultra-modern, production-ready developer showcase panel built to track, categorize, and audit web applications deployed by Computer Engineering students. This dashboard serves as a central monitoring unit for departmental project submissions and infrastructure metrics.
 
 ## 🚀 Live Production URL
-🔗 **[View Live Dashboard](https://YOUR-GITHUB-USERNAME.github.io/student-project-dashboard/)** *(Replace with your actual live link)*
+🔗 **[View Live Dashboard](https://wt-i-project-submissions-dashboard.vercel.app/)** *(Replace with your actual live link)*
 
 ---
 
